@@ -32,21 +32,21 @@ public class BST {
     
     public void insertNodo(Nodo raiz, int element){
         Nodo node = new Nodo(element);
-        if (isEmpty()){
+        if (isEmpty()) {
             setRoot(node);
-        } else{
-            if (element <= raiz.getElement()){
-                if(raiz.getLeftSon() == null){
+        } else {
+            if (element <= raiz.getElement()) {
+                if(raiz.getLeftSon() == null) {
                     raiz.setLeftSon(node);
                     node.setFather(raiz);
-                } else{
+                } else {
                     insertNodo(raiz.getLeftSon(),element);
                 }
-            } else{ /*element >= raiz.getElement();*/
-                if (raiz.getRightSon() == null){
+            } else {
+                if(raiz.getRightSon() == null) {
                     raiz.setRightSon(node);
-                    node.setFather(node);
-                } else{
+                    node.setFather(raiz);
+                } else {
                     insertNodo(raiz.getRightSon(),element);
                 }
             }
@@ -119,5 +119,49 @@ public class BST {
         preOrden(root.getLeftSon());
         preOrden(root.getRightSon());
         System.out.println("{ "+root.getElement()+" }");
+    }
+    
+    public Nodo searchElement(int element, Nodo raiz){
+        if (raiz == null){
+            return null;
+        } else{
+            if (raiz.getElement() == element){
+                return raiz;
+            } else{
+                if (element < raiz.getElement()){
+                    return searchElement(element, raiz.getLeftSon());
+                }else{
+                    return searchElement(element, raiz.getRightSon());
+                }
+            }
+        }
+    }
+    
+    public Nodo ACMP(Nodo first, Nodo second){
+        if(this.root == first || this.root == second){
+            return root;
+        } else if (first.getElement() == second.getElement()){
+            return first.getFather();
+        }else{
+            Nodo ancestor = ancestor(this.root, first, second);
+            return ancestor;
+        }
+    }
+    
+    public Nodo ancestor(Nodo raiz, Nodo first, Nodo second){
+        Nodo aux = this.root;
+        while (aux != null){
+            if (aux == first || aux == second){
+                return aux.getFather();
+            }
+            if (first.getElement() > aux.getElement() && second.getElement() > aux.getElement()){
+                aux = aux.getRightSon();
+            } else if (first.getElement() < aux.getElement() && second.getElement() < aux.getElement()){
+                aux = aux.getLeftSon();
+            } else{
+                return aux;
+            }
+        }
+        return null;
     }
 }
